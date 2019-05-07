@@ -3,6 +3,7 @@ import traceback
 from midiutil import MIDIFile
 from note_utils import shifts, carnatic_keys
 import re
+import pygame
 
 key_map = {key: i for i, key in enumerate(carnatic_keys)}
 
@@ -53,7 +54,8 @@ if __name__ == '__main__':
             filename = input('Enter notation file name -> ')
             notes = get_notes_from_file(filename)
             break
-        except:
+        except Exception as e:
+            print(e)
             print('Error processing notation file, please try again.')
             continue
     pitch = input('Enter pitch -> ')
@@ -62,6 +64,15 @@ if __name__ == '__main__':
         name = '{}_{}_{}'.format(filename.split('.')[0], pitch, tempo)
         write_midi(notes, pitch=pitch, tempo=tempo, filename=name)
         print('Successfully outputted MIDI to {}.mid'.format(name))
+        playback = input('Play back the song? (y/n) ')
+        while playback == 'y':
+            pygame.mixer.init()
+            pygame.mixer.music.load(name + '.mid')
+            pygame.mixer.music.play(loops=-1)
+            while pygame.mixer.music.get_busy():
+                pass
+            playback = input('Play again? (y/n) ')
+
     except:
         print('Error while outputting MIDI.')
         print(traceback.format_exc())

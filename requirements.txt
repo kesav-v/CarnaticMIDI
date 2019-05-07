@@ -5,3 +5,4 @@ tensorflow
 jupyter
 matplotlib
 seaborn
+pygame
