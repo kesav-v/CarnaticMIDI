@@ -26,4 +26,4 @@ The parser will ignore any character that is not one of the notes or `*` or `/`.
 
 `S,,R G,P, | D,S*, N,D, ||`
 
-`P,DP mGRS | RSN/D/ S,,,`||`
+`P,DP mGRS | RSN/D/ S,,, ||`
