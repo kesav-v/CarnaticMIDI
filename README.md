@@ -25,4 +25,5 @@ To make the note higher octave add a `*` after the note. To make the note lower 
 The parser will ignore any character that is not one of the notes or `*` or `/`. This allows for spaces and newlines to format the notation to look nicer, such as the following:
 
 `S,,R G,P, | D,S*, N,D, ||`
+
 `P,DP mGRS | RSN/D/ S,,,`||`
