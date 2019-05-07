@@ -21,3 +21,8 @@ The MIDI converter takes in any file which has notes according to the following 
 To make the note higher octave add a `*` after the note. To make the note lower octave, add a `/` after the note. The following is an example notation of the first line of the Bilahari swarajathi Rara Venu Gopabala:
 
 `S,,RG,P,D,S*,N,D,P,DPmGRSRSN/D/S,,,`
+
+The parser will ignore any character that is not one of the notes or `*` or `/`. This allows for spaces and newlines to format the notation to look nicer, such as the following:
+
+`S,,R G,P, | D,S*, N,D, ||`
+`P,DP mGRS | RSN/D/ S,,,`||`
