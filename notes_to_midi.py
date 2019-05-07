@@ -4,6 +4,7 @@ from midiutil import MIDIFile
 from note_utils import shifts, carnatic_keys
 import re
 import pygame
+import os
 
 key_map = {key: i for i, key in enumerate(carnatic_keys)}
 
@@ -24,11 +25,13 @@ def write_midi(notes, pitch='C', tempo=90, filename='example'):
         MyMIDI.addNote(0, 0, 48 + freq + shift, t, duration, volume)
         t += duration
 
-    with open("{}.mid".format(filename), "wb") as output_file:
+    if not os.path.exists('output'):
+        os.mkdir('output')
+    with open("output/{}.mid".format(filename), "wb") as output_file:
         MyMIDI.writeFile(output_file)
 
 def get_notes_from_file(filename):
-    notation = open(filename).read()
+    notation = open(os.path.join('notation_files', filename)).read()
     notation = re.sub(r'[\s|]', '', notation)
     groups = re.split(r'(\(.*?\))', notation)
     all_notes = []
@@ -67,7 +70,7 @@ if __name__ == '__main__':
         playback = input('Play back the song? (y/n) ')
         while playback == 'y':
             pygame.mixer.init()
-            pygame.mixer.music.load(name + '.mid')
+            pygame.mixer.music.load(f'output/{name}.mid')
             pygame.mixer.music.play(loops=-1)
             while pygame.mixer.music.get_busy():
                 pass

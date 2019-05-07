@@ -10,7 +10,7 @@ This will install all the required packages and create a virtual environment cal
 
 Then execute:
 
-`python midi_example.py`
+`python notes_to_midi.py`
 
 # Creating notation files
 
