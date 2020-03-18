@@ -1,0 +1,23 @@
+S*ND,M MGMGr S,,,, ,,,,, | GMG,M DND,N S*r*S*ND GMDNS* ||
+S*ND,M MGMGr S,,,, ,,,,, | GMG,M DND,N S*r*S*ND GMDNS* ||
+S*ND,M MGMGr S,,,, ,,,,,
+
+M,D,N S*,S*S*, S*r*S*,S* NDDD, |
+M,D,N S*,S*S*, S*r*S*,S* NDDD, |
+r*,r*,r* S*ND,D D,MG, G,MDN ||
+r*,r*,r* S*ND,D D,MG, G,MDN ||
+
+S*ND,M MGMGr S,,,, ,,,,, | GMG,M DND,N S*r*S*ND GMDNS* ||
+S*ND,M MGMGr S,,,, ,,,,,
+
+MMG,r S,S,, N/rN/,r G,G,, | G,MD, D,ND, G,MDN S*S*S*S*, ||
+MMG,r S,S,, N/rN/,r G,G,, | G,MD, D,ND, G,MDN S*S*S*S*, ||
+S*,r*G*, G*G*G*G*, G*r*r*S*S* S*S*S*S*, | r*,r*r*r* S*ND,, S*ND,M GrS,, ||
+S*,r*G*, G*G*G*G*, G*r*r*S*S* S*S*S*S*, | r*,r*r*r* S*ND,, S*ND,M GrS,, ||
+rGrr, GMGG, MDG,M D,D,, | NS*NN, DNDD, GMD,N S*,S*,, ||
+rGrr, GMGG, MDG,M D,D,, | NS*NN, DNDD, GMD,N S*,S*,, ||
+NNNN, r*r*r*r*, r*r*S*,r* G*,G*,, | G*r*r*r*, r*S*S*S*, S*,NDM G,MDN ||
+NNNN, r*r*r*r*, r*r*S*,r* G*,G*,, | G*r*r*r*, r*S*S*S*, S*,NDM G,MDN ||
+
+S*ND,M MGMGr S,,,, ,,,,, | GMG,M DND,N S*r*S*ND GMDNS* ||
+S*ND,M MGMGr S,,,, ,,,,,

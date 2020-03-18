@@ -4,11 +4,13 @@ from midiutil import MIDIFile
 from note_utils import shifts, carnatic_keys
 import re
 import pygame
+import argparse
 import os
 
 key_map = {key: i for i, key in enumerate(carnatic_keys)}
 
-def write_midi(notes, pitch='C', tempo=90, filename='example'):
+
+def write_midi(notes, pitch='C', tempo=90, filename='example', instrument=104):
     track    = 0
     time     = 0    # In beats
     tempo    = tempo * 4   # In BPM
@@ -18,7 +20,7 @@ def write_midi(notes, pitch='C', tempo=90, filename='example'):
 
     MyMIDI = MIDIFile(1, adjust_origin=False)
     MyMIDI.addTempo(track, time, tempo)
-    MyMIDI.addProgramChange(0, 0, 0, 104)
+    MyMIDI.addProgramChange(0, 0, 0, instrument)
 
     t = 0
     for freq, duration in notes:
@@ -30,8 +32,9 @@ def write_midi(notes, pitch='C', tempo=90, filename='example'):
     with open("output/{}.mid".format(filename), "wb") as output_file:
         MyMIDI.writeFile(output_file)
 
+
 def get_notes_from_file(filename):
-    notation = open(os.path.join('notation_files', filename)).read()
+    notation = open(filename).read()
     notation = re.sub(r'[\s|]', '', notation)
     groups = re.split(r'(\(.*?\))', notation)
     all_notes = []
@@ -51,31 +54,48 @@ def get_notes_from_file(filename):
             all_notes.append((note_val, duration))
     return all_notes
 
+
 if __name__ == '__main__':
-    while True:
-        try:
-            filename = input('Enter notation file name -> ')
-            notes = get_notes_from_file(filename)
-            break
-        except Exception as e:
-            print(e)
-            print('Error processing notation file, please try again.')
-            continue
-    pitch = input('Enter pitch -> ')
-    tempo = int(input('Enter tempo -> '))
+    options = [
+        'piano',
+        'sitar',
+        'shanai',
+        'overdriven guitar',
+        'accordion'
+    ]
+    midi_instruments = {
+        'piano': 0,
+        'sitar': 104,
+        'shanai': 111,
+        'overdriven_guitar': 29,
+        'accordion': 21
+    }
+    parser = argparse.ArgumentParser()
+    parser.add_argument('file', metavar='file', nargs=1, help='Input notation file path')
+    parser.add_argument('--pitch', '-p', type=str, choices=shifts.keys(),
+                        default='C', dest='pitch', help='Pitch to generate sound in')
+    parser.add_argument('--tempo', '-t', type=int, default=90, dest='tempo',
+                        help='Tempo to generate sound at')
+    parser.add_argument('--instrument', '-i', type=str, choices=options,
+                        default='piano', dest='instrument', help='Instrument to generate sound in')
+    args = parser.parse_args()
+    print(args.pitch, args.file, args.tempo, args.instrument)
+
     try:
-        name = '{}_{}_{}'.format(filename.split('.')[0], pitch, tempo)
-        write_midi(notes, pitch=pitch, tempo=tempo, filename=name)
+        notes = get_notes_from_file(args.file[0])
+        name = '{}_{}_{}_{}'.format(args.file[0].split('.')[0].split('/')[-1], args.pitch, args.tempo, args.instrument)
+        write_midi(notes, pitch=args.pitch, tempo=args.tempo, filename=name,
+                   instrument=midi_instruments[args.instrument])
         print('Successfully outputted MIDI to {}.mid'.format(name))
         playback = input('Play back the song? (y/n) ')
         while playback == 'y':
             pygame.mixer.init()
             pygame.mixer.music.load(f'output/{name}.mid')
-            pygame.mixer.music.play(loops=-1)
+            pygame.mixer.music.play()
             while pygame.mixer.music.get_busy():
                 pass
             playback = input('Play again? (y/n) ')
 
-    except:
+    except Exception as e:
         print('Error while outputting MIDI.')
         print(traceback.format_exc())
