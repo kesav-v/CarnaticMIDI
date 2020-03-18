@@ -10,7 +10,9 @@ This will install all the required packages and create a virtual environment cal
 
 Then execute:
 
-`python notes_to_midi.py`
+`python notes_to_midi.py -h`
+
+for more information on how to run the code on an input file.
 
 # Creating notation files
 
