@@ -1,11 +1,13 @@
 import traceback
+import os
+
+os.environ['PYGAME_HIDE_SUPPORT_PROMPT'] = "hide"
 
 from midiutil import MIDIFile
 from note_utils import shifts, carnatic_keys
 import re
 import pygame
 import argparse
-import os
 
 key_map = {key: i for i, key in enumerate(carnatic_keys)}
 
@@ -13,7 +15,7 @@ key_map = {key: i for i, key in enumerate(carnatic_keys)}
 def write_midi(notes, pitch='C', tempo=90, filename='example', instrument=104):
     track    = 0
     time     = 0    # In beats
-    tempo    = tempo * 4   # In BPM
+    tempo    = tempo   # In BPM
     volume   = 100  # 0-127, as per the MIDI standard
 
     shift = shifts[pitch]
@@ -24,8 +26,8 @@ def write_midi(notes, pitch='C', tempo=90, filename='example', instrument=104):
 
     t = 0
     for freq, duration in notes:
-        MyMIDI.addNote(0, 0, 48 + freq + shift, t, duration, volume)
-        t += duration
+        MyMIDI.addNote(0, 0, 48 + freq + shift, t, duration / 4, volume)
+        t += duration / 4
 
     if not os.path.exists('output'):
         os.mkdir('output')
@@ -36,21 +38,22 @@ def write_midi(notes, pitch='C', tempo=90, filename='example', instrument=104):
 def get_notes_from_file(filename):
     notation = open(filename).read()
     notation = re.sub(r'[\s|]', '', notation)
-    groups = re.split(r'(\(.*?\))', notation)
+    groups = re.split(r'([\<\(].*?[\)\>])', notation)
     all_notes = []
     for group in groups:
         if not group:
             continue
-        half_dur = group[0] == '('
+        multiplier = 3/2 if group[0] == '<' else (2 if group[0] == '(' else 1)
         note_strings = re.findall(r'([srgmpdnSRGMPDN][/*]*,*)', group)
         for n in note_strings:
             note, ups, downs, length = re.findall(r'([srgmpdnSRGMPDN])(\**)(/*)(,*)', n)[0]
+            if note == 's' or note == 'p':
+                note = note.upper()
             note_val = key_map[note]
             note_val += 12 * len(ups)
             note_val -= 12 * len(downs)
             duration = 1 + len(length)
-            if half_dur:
-                duration /= 2
+            duration /= multiplier
             all_notes.append((note_val, duration))
     return all_notes
 
@@ -60,7 +63,7 @@ if __name__ == '__main__':
         'piano',
         'sitar',
         'shanai',
-        'overdriven guitar',
+        'overdriven_guitar',
         'accordion'
     ]
     midi_instruments = {
@@ -79,7 +82,6 @@ if __name__ == '__main__':
     parser.add_argument('--instrument', '-i', type=str, choices=options,
                         default='piano', dest='instrument', help='Instrument to generate sound in')
     args = parser.parse_args()
-    print(args.pitch, args.file, args.tempo, args.instrument)
 
     try:
         notes = get_notes_from_file(args.file[0])
