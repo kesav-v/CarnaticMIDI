@@ -1,0 +1,21 @@
+%import common.WS
+%import common.CNAME
+%import common.NUMBER
+%import common.EOF
+
+%import common.NEWLINE
+%ignore NEWLINE
+
+%ignore WS
+
+identifier: CNAME
+start: expression*
+
+expression: ( swaram | command )
+swaram: note+
+note: BASE_NOTE [ ( UPPER_OCTAVE | LOWER_OCTAVE )* ] [ KARVE* ]
+KARVE: ","
+BASE_NOTE: /[srgmpdnSRGMPDN]/
+command: "#" identifier
+UPPER_OCTAVE: "*"
+LOWER_OCTAVE: "/"
