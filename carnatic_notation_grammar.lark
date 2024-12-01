@@ -1,0 +1,27 @@
+%import common.WS
+%import common.CNAME
+%import common.NUMBER
+%import common.EOF
+
+%import common.NEWLINE
+
+%ignore WS
+
+identifier: CNAME
+start: expression*
+
+expression: ( swaram | command )
+swaram: (note | speedup | slowdown)+
+note: BASE_NOTE [ ( UPPER_OCTAVE | LOWER_OCTAVE )* ] [ KARVE* ]
+KARVE: ","
+BASE_NOTE: /[srgmpdnSRGMPDN]/
+command: "#" (start_expression | stop_expression) NEWLINE
+start_expression: "start" beat
+beat: "beat" identifier (BEAT | NO_BEAT)+ [ NUMBER ]
+stop_expression: "stop" identifier
+UPPER_OCTAVE: "*"
+LOWER_OCTAVE: "/"
+speedup: "("
+slowdown: ")"
+BEAT: "-"
+NO_BEAT: "."
