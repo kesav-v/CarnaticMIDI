@@ -64,7 +64,7 @@ class NotesVisitor(lark.visitors.Visitor):  # type: ignore
         beat_positions: List[int] = []
         beat_signals = start_tree.children[1:-1]
         note_token = start_tree.children[-1]
-        note = 35
+        note = midi_file_builder.BASS_NOTE
         if note_token is not None:
             note = int(note_token)
         length = len(beat_signals)
@@ -129,13 +129,6 @@ def _maybe_play_midi_file(file_path: str) -> None:
 
 
 def main() -> None:
-    midi_instruments = {
-        "piano": 0,
-        "sitar": 104,
-        "shanai": 111,
-        "overdriven_guitar": 29,
-        "accordion": 21,
-    }
     parser = argparse.ArgumentParser()
     parser.add_argument(
         "file", metavar="file", nargs=1, help="Input notation file path"
@@ -161,7 +154,7 @@ def main() -> None:
         "--instrument",
         "-i",
         type=str,
-        choices=midi_instruments.keys(),
+        choices=midi_file_builder.MIDI_INSTRUMENTS.keys(),
         default="piano",
         dest="instrument",
         help="Instrument to generate sound in",
