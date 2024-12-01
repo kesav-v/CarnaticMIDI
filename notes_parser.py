@@ -74,7 +74,6 @@ class NotesVisitor(lark.visitors.Visitor):  # type: ignore
         self._midi_file_builder.add_beat(
             name, midi_file_builder.Beat(length, beat_positions, note=note)
         )
-        # self._midi_file_builder.add_beat(beat)
 
     def stop_expression(self, stop_tree: Any) -> None:
         name = stop_tree.children[0].children[0].value
