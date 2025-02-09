@@ -45,4 +45,4 @@ gamakams = {
 }
 carnatic_keys_to_shifts = {key: i for i, key in enumerate(carnatic_keys)}
 
-MIDDLE_C = 48
+MIDDLE_C = 60

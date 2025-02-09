@@ -23,9 +23,27 @@ class Note:
     octave_shift: int
 
 
+class Chord:
+    def __init__(self):
+        self._notes: List[Note] = []
+        self._current_duration = 0
+
+    def add_note(self, note: Note) -> None:
+        self._notes.append(note)
+
+    def increment_duration(self, amount: float) -> None:
+        self._current_duration += amount
+
+    def current_note(self) -> Note:
+        return self._notes[self._current_duration % len(self._notes)]
+
+
 class Beat:
     def __init__(
-        self, length: int, beat_positions: List[int], note: int = BASS_NOTE
+        self,
+        length: int,
+        beat_positions: List[int],
+        note: int = BASS_NOTE,
     ) -> None:
         self._length = length
         self._beat_positions = set(beat_positions)
@@ -48,8 +66,9 @@ class MIDIFileBuilder:
         self._notes: List[Note] = []
         self._midi = self._set_up_midi_object()
         self._volume = 100
-        self._current_time = 0
+        self._current_time = 0.0
         self._beats: Dict[str, Beat] = {}
+        self._chords: Dict[str, Chord] = {}
 
     def _set_up_midi_object(self) -> MIDIFile:
         # Music channel.
@@ -61,6 +80,11 @@ class MIDIFileBuilder:
         MyMIDI.addProgramChange(BEATS_TRACK, BEATS_CHANNEL, 0, 96)  # type: ignore
         return MyMIDI
 
+    def add_chord(self, name: str, chord: Chord) -> None:
+        if name in self._chords:
+            raise ValueError(f"Duplicate chord with name {name}")
+        self._chords[name] = chord
+
     def add_note(self, note: Note) -> None:
         self._midi.addNote(  # type: ignore
             0,
@@ -71,7 +95,23 @@ class MIDIFileBuilder:
             self._volume,
         )
         self._add_all_active_beats(note.duration)
+        self._add_all_active_chords(note.duration)
         self._current_time += note.duration / 4
+
+    def _add_all_active_chords(self, note_duration: float) -> None:
+        for chord in self._chords.values():
+            current_time = self._current_time
+            while current_time < self._current_time + note_duration / 4:
+                note = chord.current_note()
+                self._midi.addNote(
+                    0,
+                    MUSIC_CHANNEL,
+                    MIDDLE_C + note.shift + self._base_shift + 12 * note.octave_shift,
+                    current_time,
+                    note.duration / 4,
+                    self._volume,
+                )
+                chord.increment_duration(note.duration)
 
     def add_beat(self, name: str, beat: Beat) -> None:
         if name in self._beats:

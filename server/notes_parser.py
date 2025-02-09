@@ -9,9 +9,6 @@ import argparse
 from typing import Any, List
 from note_utils import shifts, carnatic_keys_to_shifts
 
-path = "foo/bar/baz/something.txt"
-something = os.path.basename(path).split(".")[0]
-
 
 CARNATIC_GRAMMAR_PATH = "carnatic_notation_grammar.lark"
 UPPER_OCTAVE = "UPPER_OCTAVE"
@@ -52,6 +49,7 @@ class NotesVisitor(lark.visitors.Visitor):  # type: ignore
             pitch, tempo, instrument
         )
         self._speedup: int = 0
+        self._current_chord: midi_file_builder.Chord | None = None
 
     def speedup(self, _speedup_tree: Any) -> None:
         self._speedup += 1
@@ -59,11 +57,11 @@ class NotesVisitor(lark.visitors.Visitor):  # type: ignore
     def slowdown(self, _slowdown_tree: Any) -> None:
         self._speedup -= 1
 
-    def beat(self, start_tree: Any) -> None:
-        name = start_tree.children[0].children[0].value
+    def beat(self, beat_tree: Any) -> None:
+        name = beat_tree.children[0].children[0].value
         beat_positions: List[int] = []
-        beat_signals = start_tree.children[1:-1]
-        note_token = start_tree.children[-1]
+        beat_signals = beat_tree.children[1:-1]
+        note_token = beat_tree.children[-1]
         note = midi_file_builder.BASS_NOTE
         if note_token is not None:
             note = int(note_token)
@@ -74,6 +72,11 @@ class NotesVisitor(lark.visitors.Visitor):  # type: ignore
         self._midi_file_builder.add_beat(
             name, midi_file_builder.Beat(length, beat_positions, note=note)
         )
+
+    def chord(self, chord_tree: Any) -> None:
+        name = chord_tree.children[0].children[0].value
+        self._current_chord = midi_file_builder.Chord()
+        self._midi_file_builder.add_chord(name, self._current_chord)
 
     def stop_expression(self, stop_tree: Any) -> None:
         name = stop_tree.children[0].children[0].value
@@ -93,9 +96,11 @@ class NotesVisitor(lark.visitors.Visitor):  # type: ignore
             elif token.type == KARVE:
                 duration += 1
         duration /= 2**self._speedup
-        self._midi_file_builder.add_note(
-            midi_file_builder.Note(shift, duration, octave_shift)
-        )
+        current_note = midi_file_builder.Note(shift, duration, octave_shift)
+        if self._current_chord:
+            self._current_chord.add_note(current_note)
+        else:
+            self._midi_file_builder.add_note(current_note)
 
     def dump_to_midi_file(self, file_name: str) -> None:
         self._midi_file_builder.dump(file_name)

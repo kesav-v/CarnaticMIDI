@@ -1,0 +1,2 @@
+P,P,,GG,P,P,,RR,G,m,P,D,N,P,,,,,
+P,P,,GG,P,P,,RR,R*,r*,R*,G*,D,R*,,,,,

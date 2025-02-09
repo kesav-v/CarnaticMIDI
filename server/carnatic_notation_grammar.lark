@@ -11,13 +11,15 @@ identifier: CNAME
 start: expression*
 
 expression: ( swaram | command )
-swaram: (note | speedup | slowdown)+
+swaram: (note | speedup | slowdown | KARVE | NEWLINE)+
 note: BASE_NOTE [ ( UPPER_OCTAVE | LOWER_OCTAVE )* ] [ KARVE* ]
 KARVE: ","
 BASE_NOTE: /[srgmpdnSRGMPDN]/
-command: "#" (start_expression | stop_expression) NEWLINE
-start_expression: "start" beat
+command: "#" (start_expression | stop_expression)
+start_expression: "start" background
+background: beat | chord
 beat: "beat" identifier (BEAT | NO_BEAT)+ [ NUMBER ]
+chord: "chord" identifier swaram
 stop_expression: "stop" identifier
 UPPER_OCTAVE: "*"
 LOWER_OCTAVE: "/"

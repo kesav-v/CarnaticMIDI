@@ -1,0 +1,3 @@
+S*,S*,P,P,S*,S*,P,P,P,P,d,S*,N,(d,Nd)P,,,
+P,P,dPm,m,m,Pmg,g,g,mgR,R,S,P,,,
+P,P,dPm,m,m,Pmg,g,g,mgR,R,S,S,,,
