@@ -1,4 +1,0 @@
-G*,R*S*,PDPDP,,
-G*,R*S*,PD,NS*,,
-G*,R*S*,PDPDP,,
-G*,R*S*,PD,NS*,,

@@ -1,2 +1,0 @@
-S,G,m,PP,PS*,P,,m,mm,G,mPmGS,,,,,
-S,G,m,P,,,S*,P,,m,mm,G,mPmGS,,,,,

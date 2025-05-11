@@ -1,5 +1,0 @@
-G*R*,S*,,,,,*G*R*S*R*S*DP
-GR,S,,,,,GRSRSD/P/
-D/N/SRGmPD
-N/SRGmPDN
-SRGmPDNS*S*,N,S*,,,

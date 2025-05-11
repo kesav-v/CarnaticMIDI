@@ -1,6 +1,0 @@
-s,R,g,m,s,,,s,p,m,D,,,n,,,R*,
-S*,,,,,DnDpm,,,g,m,g,R,g,R,n/,
-s,R,g,m,s,,,s,p,m,D,,,n,,,R*,
-S*,,,,,DnDpm,,,g,m,g,R,g,R,n/,
-sRgmpmgms,,,s,p,m,D,,,n,,,R*,
-S*,,,,,DnDpm,,,g,m,g,R,g,R,n/,

@@ -7,3 +7,4 @@ seaborn
 pygame
 lark
 Flask
+flask-cors
